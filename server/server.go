@@ -25,8 +25,10 @@ func (hctx *HandlerContext) getEventsHandler(w http.ResponseWriter, r *http.Requ
 	case http.MethodGet:
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
+		for _, event := range hctx.eventList.GetEvents() {
+			fmt.Println("event in getEventsHandler:", event.Name)
+		}
 
-		fmt.Println("getting events", hctx.eventList.GetEvents())
 		json.NewEncoder(w).Encode(hctx.eventList.GetEvents())
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
