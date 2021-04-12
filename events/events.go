@@ -1,7 +1,7 @@
 package events
 
 type Event struct {
-	Name string
+	Name string `json:"name"`
 }
 
 func NewEvent(name string) *Event {
