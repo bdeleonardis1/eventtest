@@ -10,6 +10,8 @@ import (
 )
 
 func EmitEvent(event *events.Event) error {
+	fmt.Println("EmitEvent::event.Name", event.Name)
+
 	marshaledEvent, err := json.Marshal(event)
 	if err != nil {
 		return err

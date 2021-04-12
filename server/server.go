@@ -24,6 +24,8 @@ func(hctx *HandlerContext) getEventsHandler(w http.ResponseWriter, r *http.Reque
 	case http.MethodGet:
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
+
+		fmt.Println("getting events", hctx.eventList.GetEvents())
 		json.NewEncoder(w).Encode(hctx.eventList.GetEvents())
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
@@ -41,6 +43,7 @@ func(hctx *HandlerContext) emitEventHandler(w http.ResponseWriter, r *http.Reque
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte(fmt.Sprintf("There was an error unmarshalling your event: %v", err)))
 		}
+		fmt.Println("added event:", event)
 		hctx.eventList.AppendEvent(event)
 		w.WriteHeader(http.StatusCreated)
 	default:
