@@ -20,7 +20,7 @@ func NewHandlerContext() *HandlerContext {
 	}
 }
 
-func(hctx *HandlerContext) getEventsHandler(w http.ResponseWriter, r *http.Request) {
+func (hctx *HandlerContext) getEventsHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		w.Header().Set("Content-Type", "application/json")
@@ -34,22 +34,22 @@ func(hctx *HandlerContext) getEventsHandler(w http.ResponseWriter, r *http.Reque
 	}
 }
 
-func(hctx *HandlerContext) emitEventHandler(w http.ResponseWriter, r *http.Request) {
+func (hctx *HandlerContext) emitEventHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
 		var bodyBytes []byte
 		bodyBytes, _ = ioutil.ReadAll(r.Body)
 		fmt.Println("bodyBytes", string(bodyBytes))
 
-		var event *events.Event
+		var event events.Event
 		decoder := json.NewDecoder(r.Body)
-		err := decoder.Decode(event)
+		err := decoder.Decode(&event)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte(fmt.Sprintf("There was an error unmarshalling your event: %v", err)))
 		}
 		fmt.Println("added event:", event)
-		hctx.eventList.AppendEvent(event)
+		hctx.eventList.AppendEvent(&event)
 		w.WriteHeader(http.StatusCreated)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
