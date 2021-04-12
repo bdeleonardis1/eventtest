@@ -28,7 +28,7 @@ func EmitEvent(event *events.Event) error {
 	return nil
 }
 
-func GetEvents(event *events.Event) ([]*events.Event, error) {
+func GetEvents() ([]*events.Event, error) {
 	res, err := http.Get("http://127.0.0.1:1111/getevents")
 	if err != nil {
 		return nil, err
