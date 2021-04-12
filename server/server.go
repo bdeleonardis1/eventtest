@@ -5,31 +5,26 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/bdeleonardis1/eventtest/events"
 )
 
-type Event struct {
-	Name string
-}
-
 type HandlerContext struct {
-	events []Event
+	eventList *events.EventList
 }
 
 func NewHandlerContext() *HandlerContext {
-	events := make([]Event, 0, 10)
-
 	return &HandlerContext{
-		events: events,
+		eventList: events.NewEventList(),
 	}
 }
-
 
 func(hctx *HandlerContext) getEventsHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(hctx.events)
+		json.NewEncoder(w).Encode(hctx.eventList.GetEvents())
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		w.Write([]byte("Only GET requests accepted at this endpoint"))
@@ -39,14 +34,14 @@ func(hctx *HandlerContext) getEventsHandler(w http.ResponseWriter, r *http.Reque
 func(hctx *HandlerContext) emitEventHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
-		var event Event
+		var event *events.Event
 		decoder := json.NewDecoder(r.Body)
-		err := decoder.Decode(&event)
+		err := decoder.Decode(event)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte(fmt.Sprintf("There was an error unmarshalling your event: %v", err)))
 		}
-		hctx.events = append(hctx.events, event)
+		hctx.eventList.AppendEvent(event)
 		w.WriteHeader(http.StatusCreated)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
