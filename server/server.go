@@ -3,6 +3,7 @@ package server
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -36,6 +37,10 @@ func(hctx *HandlerContext) getEventsHandler(w http.ResponseWriter, r *http.Reque
 func(hctx *HandlerContext) emitEventHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
+		var bodyBytes []byte
+		bodyBytes, _ = ioutil.ReadAll(r.Body)
+		fmt.Println("bodyBytes", string(bodyBytes))
+
 		var event *events.Event
 		decoder := json.NewDecoder(r.Body)
 		err := decoder.Decode(event)
