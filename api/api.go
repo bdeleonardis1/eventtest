@@ -18,13 +18,13 @@ func EmitEvent(event *events.Event) error {
 	}
 
 	// TODO: get this URL from a configuration
-	resp , err := http.Post("http://127.0.0.1:1111/emitevent/", "application/json", bytes.NewBuffer(marshaledEvent))
+	res, err := http.Post("http://127.0.0.1:1111/emitevent/", "application/json", bytes.NewBuffer(marshaledEvent))
 	if err != nil {
 		return err
 	}
 
-	if resp.StatusCode != http.StatusCreated {
-		return fmt.Errorf("received a %v status code when trying to emit an event", resp.StatusCode)
+	if res.StatusCode != http.StatusCreated {
+		return fmt.Errorf("received a %v status code when trying to emit an event", res.StatusCode)
 	}
 
 	return nil
@@ -41,4 +41,16 @@ func GetEvents() ([]*events.Event, error) {
 		return nil, err
 	}
 	return events, nil
+}
+
+func ClearEvents() error {
+	res, err := http.Post("http://127.0.0.1:1111/clearevents", "application/json", bytes.NewBuffer(nil))
+	if err != nil {
+		return err
+	}
+
+	if res.StatusCode != http.StatusAccepted {
+		return fmt.Errorf("received a %v status code when trying to clear the events", res.StatusCode)
+	}
+	return nil
 }

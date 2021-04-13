@@ -53,11 +53,23 @@ func (hctx *HandlerContext) emitEventHandler(w http.ResponseWriter, r *http.Requ
 	}
 }
 
+func (hctx *HandlerContext) clearEventHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodDelete:
+		hctx.eventList.ClearEvents()
+		w.WriteHeader(http.StatusAccepted)
+	default:
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		w.Write([]byte("Only DELETE requests accepted at this endpoint"))
+	}
+}
+
 func Serve() {
 	hctx := NewHandlerContext()
 
 	http.HandleFunc("/emitevent/", hctx.emitEventHandler)
 	http.HandleFunc("/getevents/", hctx.getEventsHandler)
+	http.HandleFunc("/clearevents/", hctx.clearEventHandler)
 
 	fmt.Println("listening at 127.0.0.1:1111")
 	log.Fatal(http.ListenAndServe(":1111", nil))

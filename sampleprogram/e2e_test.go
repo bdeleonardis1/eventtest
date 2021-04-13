@@ -4,6 +4,8 @@ import (
 	"os/exec"
 	"strings"
 	"testing"
+
+	"github.com/bdeleonardis1/eventtest/server"
 )
 
 const (
@@ -11,6 +13,8 @@ const (
 )
 
 func TestParity(t *testing.T) {
+	server.Serve()
+
 	testCases := []struct{
 		input string
 		expected string

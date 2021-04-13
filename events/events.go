@@ -27,3 +27,7 @@ func (el *EventList) AppendEvent(event *Event) {
 func (el *EventList) GetEvents() []*Event {
 	return el.Events
 }
+
+func (el *EventList) ClearEvents() {
+	el.Events = make([]*Event, 0)
+}
