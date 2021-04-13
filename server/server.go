@@ -63,7 +63,7 @@ func (hctx *HandlerContext) clearEventHandler(w http.ResponseWriter, r *http.Req
 		w.WriteHeader(http.StatusCreated)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		w.Write([]byte("Only DELETE requests accepted at this endpoint"))
+		w.Write([]byte("Only POST requests accepted at this endpoint"))
 	}
 }
 
