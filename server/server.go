@@ -55,7 +55,7 @@ func (hctx *HandlerContext) emitEventHandler(w http.ResponseWriter, r *http.Requ
 
 func (hctx *HandlerContext) clearEventHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
-	case http.MethodDelete:
+	case http.MethodPost:
 		hctx.eventList.ClearEvents()
 		w.WriteHeader(http.StatusAccepted)
 	default:

@@ -1,10 +1,12 @@
 package main_test
 
 import (
+	"fmt"
 	"os/exec"
 	"strings"
 	"testing"
 
+	eventtestapi "github.com/bdeleonardis1/eventtest/api"
 	"github.com/bdeleonardis1/eventtest/server"
 )
 
@@ -13,7 +15,7 @@ const (
 )
 
 func TestParity(t *testing.T) {
-	server.Serve()
+	go server.Serve()
 
 	testCases := []struct{
 		input string
@@ -43,6 +45,8 @@ func TestParity(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.input, func(t *testing.T) {
+			eventtestapi.ClearEvents()
+
 			cmd := exec.Command("./sampleprogram")
 			cmd.Stdin = strings.NewReader(tc.input)
 			out, err := cmd.Output()
@@ -54,6 +58,17 @@ func TestParity(t *testing.T) {
 			if outString != expectedBase + tc.expected {
 				t.Errorf("expected '%v', but got '%v'", expectedBase + tc.expected, outString)
 			}
+
+			events, err := eventtestapi.GetEvents()
+			if err != nil {
+				t.Errorf("error getting events: %v", err)
+			}
+			eventsStr := ""
+			for _, event := range events {
+				eventsStr += event.Name + ", "
+			}
+			eventsStr = eventsStr[:len(eventsStr)-2]
+			fmt.Printf("events (%v): %v \n", tc.input, eventsStr)
 		})
 	}
 }

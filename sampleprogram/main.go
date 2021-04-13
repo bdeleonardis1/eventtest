@@ -80,7 +80,6 @@ func optimizedNegativeSingleDigit(num int) (parity, error) {
 }
 
 func parityToString(par parity) string {
-	eventtestapi.EmitEvent(events.NewEvent("parityToString"))
 	if par == even {
 		return "even"
 	}
