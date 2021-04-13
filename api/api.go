@@ -10,8 +10,6 @@ import (
 )
 
 func EmitEvent(event *events.Event) error {
-	fmt.Println("EmitEvent::event.Name", event.Name)
-
 	marshaledEvent, err := json.Marshal(event)
 	if err != nil {
 		return err
@@ -46,7 +44,7 @@ func GetEvents() ([]*events.Event, error) {
 func ClearEvents() error {
 	fmt.Println("Attempting to clear the events")
 
-	res, err := http.Post("http://127.0.0.1:1111/clearevents", "application/json", bytes.NewBuffer([]byte("{}")))
+	res, err := http.Post("http://127.0.0.1:1111/clearevents/", "application/json", bytes.NewBuffer([]byte("{}")))
 	if err != nil {
 		return err
 	}
