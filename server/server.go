@@ -54,10 +54,13 @@ func (hctx *HandlerContext) emitEventHandler(w http.ResponseWriter, r *http.Requ
 }
 
 func (hctx *HandlerContext) clearEventHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("into the handler")
+
 	switch r.Method {
 	case http.MethodPost:
+		fmt.Println("trying to clear")
 		hctx.eventList.ClearEvents()
-		w.WriteHeader(http.StatusAccepted)
+		w.WriteHeader(http.StatusCreated)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		w.Write([]byte("Only DELETE requests accepted at this endpoint"))

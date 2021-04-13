@@ -2,4 +2,4 @@ module github.com/bdeleonardis1/eventtest/sampleprogram
 
 go 1.15
 
-require github.com/bdeleonardis1/eventtest v0.0.0-20210413200812-ae6466335e5e
+require github.com/bdeleonardis1/eventtest v0.0.0-20210413202714-608df2b5fda2

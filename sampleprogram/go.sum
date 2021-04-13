@@ -2,3 +2,5 @@ github.com/bdeleonardis1/eventtest v0.0.0-20210413191302-65a831e9461b h1:zB+/3UF
 github.com/bdeleonardis1/eventtest v0.0.0-20210413191302-65a831e9461b/go.mod h1:rmuDazGuLyYPmVFosV9D9NBpbsw7fuIQQX6ZcNFuWnQ=
 github.com/bdeleonardis1/eventtest v0.0.0-20210413200812-ae6466335e5e h1:xWqSswYCW8sqVhQMSiPhNXkrwpSA/qr5k+RMus32rZI=
 github.com/bdeleonardis1/eventtest v0.0.0-20210413200812-ae6466335e5e/go.mod h1:rmuDazGuLyYPmVFosV9D9NBpbsw7fuIQQX6ZcNFuWnQ=
+github.com/bdeleonardis1/eventtest v0.0.0-20210413202714-608df2b5fda2 h1:nv28n9Dx3YrdkgzN7NhEg+9BbAJHK33YU/wThwMs648=
+github.com/bdeleonardis1/eventtest v0.0.0-20210413202714-608df2b5fda2/go.mod h1:rmuDazGuLyYPmVFosV9D9NBpbsw7fuIQQX6ZcNFuWnQ=

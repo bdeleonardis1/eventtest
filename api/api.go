@@ -44,6 +44,8 @@ func GetEvents() ([]*events.Event, error) {
 }
 
 func ClearEvents() error {
+	fmt.Println("Attempting to clear the events")
+
 	res, err := http.Post("http://127.0.0.1:1111/clearevents", "application/json", bytes.NewBuffer(nil))
 	if err != nil {
 		return err
