@@ -54,7 +54,7 @@ func (hctx *HandlerContext) emitEventHandler(w http.ResponseWriter, r *http.Requ
 }
 
 func (hctx *HandlerContext) clearEventHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("into the handler")
+	fmt.Println("into the handler", r.Method)
 
 	switch r.Method {
 	case http.MethodPost:
