@@ -102,8 +102,11 @@ func expectEventsOrdered(t *testing.T, expectedEvents, actualEvents []*Event) {
 
 	actualIdx := 0
 	for _, expectedEvent := range expectedEvents {
+		fmt.Println("expectedEvent:", expectedEvent.Name)
 		found := false
 		for actualIdx < len(actualEvents) {
+			fmt.Println("actualEvents[actualIdx]", actualEvents[actualIdx])
+
 			if expectedEvent.Equals(actualEvents[actualIdx]) {
 				found = true
 				break
