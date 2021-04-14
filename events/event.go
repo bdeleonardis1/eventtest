@@ -37,6 +37,7 @@ func (el *EventList) AppendEvent(event *Event) {
 }
 
 func (el *EventList) GetEvents() []*Event {
+	fmt.Println("getting the events:", el.Events)
 	return el.Events
 }
 
