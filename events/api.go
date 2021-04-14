@@ -81,6 +81,8 @@ func ExpectEvents(t *testing.T, expectedEvents []*Event, ordered IsOrdered) {
 	t.Helper()
 
 	actualEvents, err := GetEvents()
+	fmt.Println("actualEvents in ExpectEvents: ", String(actualEvents))
+
 	if err != nil {
 		t.Fatalf("error getting events: %v", err)
 	}

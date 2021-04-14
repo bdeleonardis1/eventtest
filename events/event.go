@@ -46,5 +46,10 @@ func String(events []*Event) string {
 	for _, event := range events {
 		str += event.Name + ", "
 	}
+
+	if len(str) < 2 {
+		return str
+	}
+
 	return str[:len(str)-2]
 }
