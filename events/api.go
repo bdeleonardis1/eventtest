@@ -21,8 +21,6 @@ func EmitEvent(event *Event) error {
 		return err
 	}
 
-	fmt.Println("marshaledEvent in EmitEvent", marshaledEvent)
-
 	// TODO: get this URL from a configuration
 	res, err := http.Post("http://127.0.0.1:1111/emitevent/", "application/json", bytes.NewBuffer(marshaledEvent))
 	if err != nil {
@@ -84,7 +82,6 @@ func ExpectEvents(t *testing.T, expectedEvents []*Event, ordered IsOrdered) {
 	t.Helper()
 
 	actualEvents, err := GetEvents()
-	fmt.Println("actualEvents in ExpectEvents: ", String(actualEvents))
 
 	if err != nil {
 		t.Fatalf("error getting events: %v", err)
@@ -102,11 +99,8 @@ func expectEventsOrdered(t *testing.T, expectedEvents, actualEvents []*Event) {
 
 	actualIdx := 0
 	for _, expectedEvent := range expectedEvents {
-		fmt.Println("expectedEvent:", expectedEvent.Name)
 		found := false
 		for actualIdx < len(actualEvents) {
-			fmt.Println("actualEvents[actualIdx]", actualEvents[actualIdx])
-
 			if expectedEvent.Equals(actualEvents[actualIdx]) {
 				found = true
 				break

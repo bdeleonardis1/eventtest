@@ -1,7 +1,5 @@
 package events
 
-import "fmt"
-
 type Event struct {
 	Name string `json:"name"`
 }
@@ -31,18 +29,14 @@ func NewEventList() *EventList {
 }
 
 func (el *EventList) AppendEvent(event *Event) {
-	fmt.Println("we're appending the event", event.Name)
 	el.Events = append(el.Events, event)
-	fmt.Println("events after appending:", String(el.Events))
 }
 
 func (el *EventList) GetEvents() []*Event {
-	fmt.Println("getting the events:", el.Events)
 	return el.Events
 }
 
 func (el *EventList) ClearEvents() {
-	fmt.Println("clearing events")
 	el.Events = make([]*Event, 0)
 }
 
