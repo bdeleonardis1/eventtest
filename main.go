@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/bdeleonardis1/eventtest/server"
+	"github.com/bdeleonardis1/eventtest/events"
 )
 
 func main() {
-	server.Serve()
+	events.createServer()
 }

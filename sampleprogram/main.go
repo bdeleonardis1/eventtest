@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strconv"
 
-	eventtestapi "github.com/bdeleonardis1/eventtest/api"
 	"github.com/bdeleonardis1/eventtest/events"
 )
 
@@ -26,7 +25,7 @@ func main() {
 func getParity(textNum string) parity {
 	// 1 is the most common number checked so we have an optimized check here.
 	if textNum == "1" {
-		eventtestapi.EmitEvent(events.NewEvent("1Optimization"))
+		events.EmitEvent(events.NewEvent("1Optimization"))
 		return odd
 	}
 
@@ -41,18 +40,18 @@ func getParity(textNum string) parity {
 		return par
 	}
 
-	eventtestapi.EmitEvent(events.NewEvent("Modding"))
+	events.EmitEvent(events.NewEvent("Modding"))
 	if num % 2 == 0 {
 		return even
 	}
-	eventtestapi.EmitEvent(events.NewEvent("TheVeryEnd"))
+	events.EmitEvent(events.NewEvent("TheVeryEnd"))
 	return odd
 }
 
 // optimizedSingleDigitParity returns the parity of all single digit numbers.
 // If the number has more than one digit it returns an error.
 func optimizedSingleDigitParity(textNum string) (parity, error) {
-	eventtestapi.EmitEvent(events.NewEvent("OptimizedSingleDigit"))
+	events.EmitEvent(events.NewEvent("OptimizedSingleDigit"))
 	switch textNum {
 	case "1", "3", "5", "7", "9":
 		return odd, nil
@@ -64,13 +63,13 @@ func optimizedSingleDigitParity(textNum string) (parity, error) {
 }
 
 func convertToNumber(textNum string) int {
-	eventtestapi.EmitEvent(events.NewEvent("convertToNumber"))
+	events.EmitEvent(events.NewEvent("convertToNumber"))
 	num, _ := strconv.Atoi(textNum)
 	return num
 }
 
 func optimizedNegativeSingleDigit(num int) (parity, error) {
-	eventtestapi.EmitEvent(events.NewEvent("OptimizedNegativeSingleDigit"))
+	events.EmitEvent(events.NewEvent("OptimizedNegativeSingleDigit"))
 	switch num {
 	case -1, -3, -5, -7, -9:
 		return odd, nil

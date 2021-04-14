@@ -5,9 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	eventtestapi "github.com/bdeleonardis1/eventtest/api"
 	"github.com/bdeleonardis1/eventtest/events"
-	"github.com/bdeleonardis1/eventtest/server"
 )
 
 const (
@@ -15,7 +13,8 @@ const (
 )
 
 func TestParity(t *testing.T) {
-	go server.Serve()
+	events.StartListening("", "")
+	defer events.StopListening()
 
 	testCases := []struct{
 		input string
@@ -40,7 +39,7 @@ func TestParity(t *testing.T) {
 			input: "11",
 			expected: "11 is an odd number",
 			expectedEvents: []*events.Event{
-				events.NewEvent("convertToNumber"), events.NewEvent("Modding"),
+				events.NewEvent("convertToNumber"), events.NewEvent("Modding"), events.NewEvent("TheVeryEnd"),
 			},
 		},
 		{
@@ -61,7 +60,7 @@ func TestParity(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.input, func(t *testing.T) {
-			eventtestapi.ClearEvents()
+			events.ClearEvents()
 
 			cmd := exec.Command("./sampleprogram")
 			cmd.Stdin = strings.NewReader(tc.input)
@@ -75,13 +74,13 @@ func TestParity(t *testing.T) {
 				t.Errorf("expected '%v', but got '%v'", expectedBase + tc.expected, outString)
 			}
 
-			eventtestapi.ExpectExactEvents(t, tc.expectedEvents)
+			events.ExpectExactEvents(t, tc.expectedEvents)
 		})
 	}
 }
 
 func TestExpectEventsDemo(t *testing.T) {
-	eventtestapi.ClearEvents()
+	events.ClearEvents()
 
 	cmd := exec.Command("./sampleprogram")
 	cmd.Stdin = strings.NewReader("19")
@@ -90,13 +89,13 @@ func TestExpectEventsDemo(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	eventtestapi.ExpectEvents(t, []*events.Event{events.NewEvent("convertToNumber"), events.NewEvent("TheVeryEnd")}, eventtestapi.Ordered)
-	eventtestapi.ExpectEvents(t, []*events.Event{events.NewEvent("TheVeryEnd"), events.NewEvent("convertToNumber")}, eventtestapi.Unordered)
+	events.ExpectEvents(t, []*events.Event{events.NewEvent("convertToNumber"), events.NewEvent("TheVeryEnd")}, events.Ordered)
+	events.ExpectEvents(t, []*events.Event{events.NewEvent("TheVeryEnd"), events.NewEvent("convertToNumber")}, events.Unordered)
 
-	eventtestapi.UnexpectedEvents(t, []*events.Event{events.NewEvent("1Optimization"), events.NewEvent("OptimizedNegativeSingleDigit")})
+	events.UnexpectedEvents(t, []*events.Event{events.NewEvent("1Optimization"), events.NewEvent("OptimizedNegativeSingleDigit")})
 
 	// should fail.
-	eventtestapi.ExpectEvents(t, []*events.Event{events.NewEvent("TheVeryEnd"), events.NewEvent("convertToNumber")}, eventtestapi.Ordered)
+	events.ExpectEvents(t, []*events.Event{events.NewEvent("TheVeryEnd"), events.NewEvent("convertToNumber")}, events.Ordered)
 }
 
 
