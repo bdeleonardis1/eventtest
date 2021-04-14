@@ -42,6 +42,7 @@ func (el *EventList) GetEvents() []*Event {
 }
 
 func (el *EventList) ClearEvents() {
+	fmt.Println("clearing events")
 	el.Events = make([]*Event, 0)
 }
 
