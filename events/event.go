@@ -1,5 +1,7 @@
 package events
 
+import "fmt"
+
 type Event struct {
 	Name string `json:"name"`
 }
@@ -18,7 +20,6 @@ func (e *Event) String() string {
 	return e.Name
 }
 
-
 type EventList struct {
 	Events []*Event
 }
@@ -30,7 +31,9 @@ func NewEventList() *EventList {
 }
 
 func (el *EventList) AppendEvent(event *Event) {
+	fmt.Println("we're appending the event", event.Name)
 	el.Events = append(el.Events, event)
+	fmt.Println("events after appending:", String(el.Events))
 }
 
 func (el *EventList) GetEvents() []*Event {
