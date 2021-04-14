@@ -75,7 +75,7 @@ func TestParity(t *testing.T) {
 				t.Errorf("expected '%v', but got '%v'", expectedBase + tc.expected, outString)
 			}
 
-
+			eventtestapi.ExpectEvents(t, tc.expectedEvents)
 		})
 	}
 }

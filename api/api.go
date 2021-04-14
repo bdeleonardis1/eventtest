@@ -10,6 +10,12 @@ import (
 	"github.com/bdeleonardis1/eventtest/events"
 )
 
+type IsOrdered int
+const (
+	Ordered IsOrdered = iota
+	Unordered
+)
+
 func EmitEvent(event *events.Event) error {
 	marshaledEvent, err := json.Marshal(event)
 	if err != nil {
@@ -56,7 +62,7 @@ func ClearEvents() error {
 	return nil
 }
 
-func ExpectEvents(t *testing.T, expectedEvents []*events.Event) {
+func ExpectExactEvents(t *testing.T, expectedEvents []*events.Event) {
 	actualEvents, err := GetEvents()
 	if err != nil {
 		t.Error(err)
@@ -69,6 +75,61 @@ func ExpectEvents(t *testing.T, expectedEvents []*events.Event) {
 	for i, actualEvent := range actualEvents {
 		if !actualEvent.Equals(expectedEvents[i]) {
 			t.Errorf("the %vth actual event: %v, does not equal the expected event: %v", actualEvent, expectedEvents[i])
+		}
+	}
+}
+
+func ExpectEvents(t *testing.T, expectedEvents []*events.Event, ordered IsOrdered) {
+	actualEvents, err := GetEvents()
+	if err != nil {
+		t.Fatalf("error getting events: %v", err)
+	}
+
+	if ordered == Ordered {
+		expectEventsOrdered(t, expectedEvents, actualEvents)
+	} else {
+		expectEventsUnordered(t, expectedEvents, actualEvents)
+	}
+}
+
+func expectEventsOrdered(t *testing.T, expectedEvents, actualEvents []*events.Event) {
+	actualIdx := 0
+	for _, expectedEvent := range expectedEvents {
+		found := false
+		for actualIdx < len(actualEvents) {
+			if expectedEvent.Equals(actualEvents[actualIdx]) {
+				found = true
+				break
+			}
+			actualIdx += 1
+		}
+		if !found {
+			t.Fatalf("could not find expected event: %v", expectedEvent)
+		}
+	}
+}
+
+func expectEventsUnordered(t *testing.T, expectedEvents, actualEvents []*events.Event) {
+	for _, expectedEvent := range expectedEvents {
+		found := false
+		for _, actualEvent := range actualEvents {
+			if expectedEvent.Equals(actualEvent) {
+				found = true
+				break
+			}
+		}
+		if !found {
+			t.Errorf("could not find expected event: %v", expectedEvent)
+		}
+	}
+}
+
+func UnexpectedEvents(t *testing.T, unexpectedEvents, actualEvents []*events.Event) {
+	for _, unexpected := range unexpectedEvents {
+		for _, actualEvent := range actualEvents {
+			if unexpected.Equals(actualEvent) {
+				fmt.Errorf("event: %v occurred even though it should not have", unexpected)
+			}
 		}
 	}
 }
