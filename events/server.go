@@ -31,11 +31,14 @@ func (hctx *HandlerContext) getEventsHandler(w http.ResponseWriter, r *http.Requ
 }
 
 func (hctx *HandlerContext) emitEventHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("in emitEventHandler")
 	switch r.Method {
 	case http.MethodPost:
+		fmt.Println("in post")
 		var event Event
 		decoder := json.NewDecoder(r.Body)
 		err := decoder.Decode(&event)
+		fmt.Println("the event:", event)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte(fmt.Sprintf("There was an error unmarshalling your event: %v", err)))

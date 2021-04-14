@@ -9,6 +9,7 @@ import (
 )
 
 type IsOrdered int
+
 const (
 	Ordered IsOrdered = iota
 	Unordered
@@ -19,6 +20,8 @@ func EmitEvent(event *Event) error {
 	if err != nil {
 		return err
 	}
+
+	fmt.Println("marshaledEvent in EmitEvent", marshaledEvent)
 
 	// TODO: get this URL from a configuration
 	res, err := http.Post("http://127.0.0.1:1111/emitevent/", "application/json", bytes.NewBuffer(marshaledEvent))
