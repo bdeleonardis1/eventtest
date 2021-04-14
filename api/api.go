@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"testing"
 
 	"github.com/bdeleonardis1/eventtest/events"
 )
@@ -53,4 +54,21 @@ func ClearEvents() error {
 		return fmt.Errorf("received a %v status code when trying to clear the events", res.StatusCode)
 	}
 	return nil
+}
+
+func ExpectEvents(t *testing.T, expectedEvents []*events.Event) {
+	actualEvents, err := GetEvents()
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(actualEvents) != len(expectedEvents) {
+		t.Errorf("actual events: %v, not the same length as expected events: %v", events.String(actualEvents), events.String(expectedEvents))
+	}
+
+	for i, actualEvent := range actualEvents {
+		if !actualEvent.Equals(expectedEvents[i]) {
+			t.Errorf("the %vth actual event: %v, does not equal the expected event: %v", actualEvent, expectedEvents[i])
+		}
+	}
 }

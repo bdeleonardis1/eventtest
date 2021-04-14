@@ -10,6 +10,15 @@ func NewEvent(name string) *Event {
 	}
 }
 
+func (e *Event) Equals(o *Event) bool {
+	return e.Name == o.Name
+}
+
+func (e *Event) String() string {
+	return e.Name
+}
+
+
 type EventList struct {
 	Events []*Event
 }
@@ -30,4 +39,12 @@ func (el *EventList) GetEvents() []*Event {
 
 func (el *EventList) ClearEvents() {
 	el.Events = make([]*Event, 0)
+}
+
+func String(events []*Event) string {
+	str := ""
+	for _, event := range events {
+		str += event.Name + ", "
+	}
+	return str[:len(str)-2]
 }
