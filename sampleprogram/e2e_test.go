@@ -40,7 +40,7 @@ func TestParity(t *testing.T) {
 			input: "11",
 			expected: "11 is an odd number",
 			expectedEvents: []*events.Event{
-				events.NewEvent("convertToNumber"),
+				events.NewEvent("convertToNumber"), events.NewEvent("Modding"),
 			},
 		},
 		{
@@ -75,9 +75,27 @@ func TestParity(t *testing.T) {
 				t.Errorf("expected '%v', but got '%v'", expectedBase + tc.expected, outString)
 			}
 
-			eventtestapi.ExpectEvents(t, tc.expectedEvents)
+			eventtestapi.ExpectExactEvents(t, tc.expectedEvents)
 		})
 	}
 }
+
+func TestExpectEventsDemo(t *testing.T) {
+	eventtestapi.ClearEvents()
+
+	cmd := exec.Command("./sampleprogram")
+	cmd.Stdin = strings.NewReader("19")
+	err := cmd.Run()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	eventtestapi.ExpectEvents(t, []*events.Event{events.NewEvent("convertToNumber"), events.NewEvent("TheVeryEnd")}, eventtestapi.Ordered)
+	eventtestapi.ExpectEvents(t, []*events.Event{events.NewEvent("TheVeryEnd"), events.NewEvent("convertToNumber")}, eventtestapi.Unordered)
+
+	eventtestapi.UnexpectedEvents(t, []*events.Event{events.NewEvent("1Optimization"), events.NewEvent("OptimizedNegativeSingleDigit")})
+}
+
+
 
 

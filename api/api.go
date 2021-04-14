@@ -69,7 +69,7 @@ func ExpectExactEvents(t *testing.T, expectedEvents []*events.Event) {
 	}
 
 	if len(actualEvents) != len(expectedEvents) {
-		t.Errorf("actual events: %v, not the same length as expected events: %v", events.String(actualEvents), events.String(expectedEvents))
+		t.Fatalf("actual events: %v, not the same length as expected events: %v", events.String(actualEvents), events.String(expectedEvents))
 	}
 
 	for i, actualEvent := range actualEvents {
@@ -124,11 +124,16 @@ func expectEventsUnordered(t *testing.T, expectedEvents, actualEvents []*events.
 	}
 }
 
-func UnexpectedEvents(t *testing.T, unexpectedEvents, actualEvents []*events.Event) {
+func UnexpectedEvents(t *testing.T, unexpectedEvents []*events.Event) {
+	actualEvents, err := GetEvents()
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	for _, unexpected := range unexpectedEvents {
 		for _, actualEvent := range actualEvents {
 			if unexpected.Equals(actualEvent) {
-				fmt.Errorf("event: %v occurred even though it should not have", unexpected)
+				t.Errorf("event: %v occurred even though it should not have", unexpected)
 			}
 		}
 	}

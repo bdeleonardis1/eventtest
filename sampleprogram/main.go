@@ -41,9 +41,11 @@ func getParity(textNum string) parity {
 		return par
 	}
 
+	eventtestapi.EmitEvent(events.NewEvent("Modding"))
 	if num % 2 == 0 {
 		return even
 	}
+	eventtestapi.EmitEvent(events.NewEvent("TheVeryEnd"))
 	return odd
 }
 
