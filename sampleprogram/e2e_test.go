@@ -94,6 +94,9 @@ func TestExpectEventsDemo(t *testing.T) {
 	eventtestapi.ExpectEvents(t, []*events.Event{events.NewEvent("TheVeryEnd"), events.NewEvent("convertToNumber")}, eventtestapi.Unordered)
 
 	eventtestapi.UnexpectedEvents(t, []*events.Event{events.NewEvent("1Optimization"), events.NewEvent("OptimizedNegativeSingleDigit")})
+
+	// should fail.
+	eventtestapi.ExpectEvents(t, []*events.Event{events.NewEvent("TheVeryEnd"), events.NewEvent("convertToNumber")}, eventtestapi.Ordered)
 }
 
 

@@ -93,6 +93,8 @@ func ExpectEvents(t *testing.T, expectedEvents []*events.Event, ordered IsOrdere
 }
 
 func expectEventsOrdered(t *testing.T, expectedEvents, actualEvents []*events.Event) {
+	t.Helper()
+
 	actualIdx := 0
 	for _, expectedEvent := range expectedEvents {
 		found := false

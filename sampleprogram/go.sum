@@ -16,3 +16,5 @@ github.com/bdeleonardis1/eventtest v0.0.0-20210414164356-c80de2b7c2ce h1:+gZNRly
 github.com/bdeleonardis1/eventtest v0.0.0-20210414164356-c80de2b7c2ce/go.mod h1:rmuDazGuLyYPmVFosV9D9NBpbsw7fuIQQX6ZcNFuWnQ=
 github.com/bdeleonardis1/eventtest v0.0.0-20210414185200-e6d2653a0672 h1:kIeIGi3wSlMpVt36sIgLwi4ilyDb9t/u/kCpegwhEHk=
 github.com/bdeleonardis1/eventtest v0.0.0-20210414185200-e6d2653a0672/go.mod h1:rmuDazGuLyYPmVFosV9D9NBpbsw7fuIQQX6ZcNFuWnQ=
+github.com/bdeleonardis1/eventtest v0.0.0-20210414191306-2006ffa1a195 h1:R/W2f3olqi4oimNmO2ztTQKvZa6n3HpUnMytO+A7hZI=
+github.com/bdeleonardis1/eventtest v0.0.0-20210414191306-2006ffa1a195/go.mod h1:rmuDazGuLyYPmVFosV9D9NBpbsw7fuIQQX6ZcNFuWnQ=
