@@ -32,5 +32,5 @@ func StopListening(server CloseableServer) {
 	if err != nil {
 		panic(err)
 	}
-	os.Unsetenv(envVarPortName)
+	//os.Unsetenv(envVarPortName)
 }

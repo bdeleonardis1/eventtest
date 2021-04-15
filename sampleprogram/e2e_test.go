@@ -14,45 +14,43 @@ const (
 
 func TestParity(t *testing.T) {
 	server := events.StartListening("")
-	defer func() {
-		events.StopListening(server)
-	}()
+	defer events.StopListening(server)
 
-	testCases := []struct{
-		input string
-		expected string
+	testCases := []struct {
+		input          string
+		expected       string
 		expectedEvents []*events.Event
 	}{
 		{
-			input: "1",
+			input:    "1",
 			expected: "1 is an odd number",
 			expectedEvents: []*events.Event{
 				events.NewEvent("1Optimization"),
 			},
 		},
 		{
-			input: "2",
+			input:    "2",
 			expected: "2 is an even number",
 			expectedEvents: []*events.Event{
 				events.NewEvent("OptimizedSingleDigit"),
 			},
 		},
 		{
-			input: "11",
+			input:    "11",
 			expected: "11 is an odd number",
 			expectedEvents: []*events.Event{
 				events.NewEvent("convertToNumber"), events.NewEvent("Modding"), events.NewEvent("TheVeryEnd"),
 			},
 		},
 		{
-			input: "-3",
+			input:    "-3",
 			expected: "-3 is an odd number",
 			expectedEvents: []*events.Event{
 				events.NewEvent("convertToNumber"), events.NewEvent("OptimizedNegativeSingleDigit"),
 			},
 		},
 		{
-			input: "-4",
+			input:    "-4",
 			expected: "-4 is an even number",
 			expectedEvents: []*events.Event{
 				events.NewEvent("convertToNumber"), events.NewEvent("OptimizedNegativeSingleDigit"),
@@ -72,8 +70,8 @@ func TestParity(t *testing.T) {
 			}
 			outString := strings.TrimSpace(string(out))
 
-			if outString != expectedBase + tc.expected {
-				t.Errorf("expected '%v', but got '%v'", expectedBase + tc.expected, outString)
+			if outString != expectedBase+tc.expected {
+				t.Errorf("expected '%v', but got '%v'", expectedBase+tc.expected, outString)
 			}
 
 			events.ExpectExactEvents(t, tc.expectedEvents)
