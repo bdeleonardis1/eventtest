@@ -1,5 +1,9 @@
 package events
 
+import (
+	"sync"
+)
+
 type Event struct {
 	Name string `json:"name"`
 }
@@ -20,23 +24,31 @@ func (e *Event) String() string {
 
 type EventList struct {
 	Events []*Event
+	mutex *sync.Mutex
 }
 
 func NewEventList() *EventList {
 	return &EventList{
 		Events: make([]*Event, 0),
+		mutex: new(sync.Mutex),
 	}
 }
 
 func (el *EventList) AppendEvent(event *Event) {
+	el.mutex.Lock()
+	defer el.mutex.Unlock()
 	el.Events = append(el.Events, event)
 }
 
 func (el *EventList) GetEvents() []*Event {
+	el.mutex.Lock()
+	defer el.mutex.Unlock()
 	return el.Events
 }
 
 func (el *EventList) ClearEvents() {
+	el.mutex.Lock()
+	defer el.mutex.Unlock()
 	el.Events = make([]*Event, 0)
 }
 
