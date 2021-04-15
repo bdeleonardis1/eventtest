@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 )
 
 type HandlerContext struct {
@@ -66,6 +67,8 @@ func (hctx *HandlerContext) clearEventHandler(w http.ResponseWriter, r *http.Req
 
 func createServer(port string) *http.Server {
 	hctx := NewHandlerContext()
+
+	fmt.Println(os.Getenv(envVarPortName))
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/emitevent/", hctx.emitEventHandler)

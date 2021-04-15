@@ -17,10 +17,8 @@ func StartListening(port string) CloseableServer {
 	if port == "" {
 		port = "1111"
 	}
+	os.Setenv(envVarPortName, port)
 
-	// Since this is in a goroutine, we don't need to worry about
-	// stopping the server from listening. When the program terminates
-	// this will stop.
 	server := createServer(port)
 
 	os.Setenv(envVarPortName, port)
