@@ -6,9 +6,9 @@ that you think it is.
 
 ## Example
 Let's say you have two functions that both do the same thing:
-- OptimizedFunc: faster, but can only be called
+- `OptimizedFunc`: faster, but can only be called
   if cond is true
-- UnoptimizedFunc: slower, but always works
+- `UnoptimizedFunc`: slower, but always works
 
 Your code currently looks like this:
 ```go
@@ -18,14 +18,14 @@ if cond {
 return UnoptimzedFunc()
 ```
 
-You want to ensure that OptimizedFunc is being called whenever it can.
-Sure, you can write unit tests to ensure the if block is working. But
+You want to ensure that `OptimizedFunc` is being called whenever it can be.
+Sure, you can write unit tests to ensure the if statement is working. But
 this does not necessarily give you the confidence that the whole system
 is working end to end as you would expect.
 
-With EventTest you can emit events to ensure thing are happening as you 
+With `EventTest` you can emit events to ensure thing are happening as you 
 expect them to. To do this, simply add `emitEvent` calls anywhere that you
-want to test. So you can modify `OptimizedFunc()` and `UnoptimizedFunc` like 
+want to test. So you can modify `OptimizedFunc` and `UnoptimizedFunc` like 
 so:
 
 ```go
@@ -41,14 +41,16 @@ func UnoptimizedFunc() {
 ```
 
 Now testing that these events are easy in your e2e tests. All you have
-to do is call `startListening`, and then use one the helpers to ensure the events
-that you expect to occur have occurred. For example, let's say your e2e test 
-hits an API endpoint:
+to do is call `startListening`, and then use one of the test helpers to ensure the events
+that you expect to occur have occurred. For example, this could be a template
+for your e2e test.
+
 ```go
 eventtest.StartListening()
 defer eventtest.StopListening()
 
-... //Standard e2e test code that hits endpoint and verifies output matches expected
+... // Standard e2e test code that runs application and ensures
+... // the output matches expected.
 
 // Now ensure we called OptimizedFunc.
 eventtest.ExpectEvents([]*eventtest.Event{eventtest.NewEvent("OptimizedFunc")})
@@ -62,8 +64,8 @@ eventtest.ClearEvents()
 For a full actual example, see the `sampleprogram` directory. Note, that you cannot 
 run a test that uses eventtest in parallel with any other test, because the events
 the other tests are running will conflict with them. Under the hood, `StartListening`
-starts up an HTTP server on port `localhost:1111` that listens for events. `EmitEvent`,
-and all the test helpers, make API requests to this HTTP server.
+starts up an HTTP server on port `localhost:1111` that listens for events. `EmitEvent`
+and all the test helpers make API requests to this HTTP server.
 
 This was implemented this way to be able to keep track of events through the entire system.
 If you have separate processes for different services, you can still ensure that the events
