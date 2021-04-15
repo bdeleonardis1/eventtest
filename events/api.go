@@ -23,8 +23,8 @@ const (
 
 func EmitEvent(event *Event) error {
 	port := os.Getenv(envVarPortName)
-	panic("trying to emit the event " + port)
 	if port == "" {
+		panic("how is port empty: " + envVarPortName)
 		return nil
 	}
 
