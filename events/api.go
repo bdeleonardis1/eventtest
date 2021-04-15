@@ -23,7 +23,7 @@ const (
 
 func EmitEvent(event *Event) error {
 	port := os.Getenv(envVarPortName)
-	fmt.Println("trying to emit the event", port)
+	panic("trying to emit the event " + port)
 	if port == "" {
 		return nil
 	}
