@@ -17,8 +17,12 @@ func NewHandlerContext() *HandlerContext {
 }
 
 func (hctx *HandlerContext) getEventsHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("getEvents handler", r.Method)
+
 	switch r.Method {
 	case http.MethodGet:
+		fmt.Println("events in getEvents", hctx.eventList.GetEvents())
+
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
 
@@ -30,6 +34,7 @@ func (hctx *HandlerContext) getEventsHandler(w http.ResponseWriter, r *http.Requ
 }
 
 func (hctx *HandlerContext) emitEventHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("inside emitEvent", r.Method)
 	switch r.Method {
 	case http.MethodPost:
 		var event Event
@@ -40,6 +45,7 @@ func (hctx *HandlerContext) emitEventHandler(w http.ResponseWriter, r *http.Requ
 			w.Write([]byte(fmt.Sprintf("There was an error unmarshalling your event: %v", err)))
 		}
 		hctx.eventList.AppendEvent(&event)
+		fmt.Println("Events after emitting:", hctx.eventList.GetEvents())
 		w.WriteHeader(http.StatusCreated)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
@@ -68,7 +74,6 @@ func createServer(port string) *http.Server {
 
 	server := &http.Server{Addr: ":" + port, Handler: mux}
 
-	fmt.Println("listening at 127.0.0.1:" + port)
 	go func() {
 		server.ListenAndServe()
 	}()

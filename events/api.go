@@ -12,9 +12,9 @@ import (
 type IsOrdered int
 
 const (
-	urlBase = "http://127.0.0.1"
-	emitEventPath = "emitevent/"
-	getEventsPath = "getevents/"
+	urlBase         = "http://127.0.0.1"
+	emitEventPath   = "emitevent/"
+	getEventsPath   = "getevents/"
 	clearEventsPath = "clearevents/"
 
 	Ordered IsOrdered = iota
@@ -104,6 +104,8 @@ func ExpectEvents(t *testing.T, expectedEvents []*Event, ordered IsOrdered) {
 	t.Helper()
 
 	actualEvents, err := GetEvents()
+
+	fmt.Println("actual events in ExpectEvents:", String(actualEvents))
 
 	if err != nil {
 		t.Fatalf("error getting events: %v", err)
