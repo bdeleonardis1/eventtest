@@ -1,22 +1,36 @@
 package events
 
-func StartListening(port string, envVarName string) {
+import (
+	"context"
+	"os"
+)
+
+const (
+	envVarPortName = "EVENTTESTPORT"
+)
+
+type CloseableServer interface {
+	Shutdown(context.Context) error
+}
+
+func StartListening(port string) CloseableServer {
 	if port == "" {
 		port = "1111"
-	}
-
-	if envVarName == "" {
-		envVarName = "EVENTTESTPORT"
 	}
 
 	// Since this is in a goroutine, we don't need to worry about
 	// stopping the server from listening. When the program terminates
 	// this will stop.
-	go createServer()
+	server := createServer(port)
 
-	// TODO: setup environment variable
+	os.Setenv(envVarPortName, port)
+	return server
 }
 
-func StopListening() {
-	// TODO: cleanup environment variable.
+func StopListening(server CloseableServer) {
+	err := server.Shutdown(context.Background())
+	if err != nil {
+		panic(err)
+	}
+	os.Unsetenv(envVarPortName)
 }

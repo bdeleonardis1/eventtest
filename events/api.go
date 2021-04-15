@@ -5,24 +5,34 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"testing"
 )
 
 type IsOrdered int
 
 const (
+	urlBase = "http://127.0.0.1"
+	emitEventPath = "emitevent/"
+	getEventsPath = "getevents/"
+	clearEventsPath = "clearevents/"
+
 	Ordered IsOrdered = iota
 	Unordered
 )
 
 func EmitEvent(event *Event) error {
+	port := os.Getenv(envVarPortName)
+	if port == "" {
+		return nil
+	}
+
 	marshaledEvent, err := json.Marshal(event)
 	if err != nil {
 		return err
 	}
 
-	// TODO: get this URL from a configuration
-	res, err := http.Post("http://127.0.0.1:1111/emitevent/", "application/json", bytes.NewBuffer(marshaledEvent))
+	res, err := http.Post(getFullURL(port, emitEventPath), "application/json", bytes.NewBuffer(marshaledEvent))
 	if err != nil {
 		return err
 	}
@@ -35,10 +45,17 @@ func EmitEvent(event *Event) error {
 }
 
 func GetEvents() ([]*Event, error) {
-	res, err := http.Get("http://127.0.0.1:1111/getevents")
+	port := os.Getenv(envVarPortName)
+	if port == "" {
+		return nil, fmt.Errorf("%v environment variable not set, ensure you called StartListening", envVarPortName)
+	}
+
+	res, err := http.Get(getFullURL(port, getEventsPath))
+
 	if err != nil {
 		return nil, err
 	}
+
 	var events []*Event
 	err = json.NewDecoder(res.Body).Decode(&events)
 	if err != nil {
@@ -48,7 +65,12 @@ func GetEvents() ([]*Event, error) {
 }
 
 func ClearEvents() error {
-	res, err := http.Post("http://127.0.0.1:1111/clearevents/", "application/json", bytes.NewBuffer([]byte("{}")))
+	port := os.Getenv(envVarPortName)
+	if port == "" {
+		return fmt.Errorf("%v environment variable not set, ensure you called StartListening", envVarPortName)
+	}
+
+	res, err := http.Post(getFullURL(port, clearEventsPath), "application/json", bytes.NewBuffer([]byte("{}")))
 	if err != nil {
 		return err
 	}
@@ -64,7 +86,7 @@ func ExpectExactEvents(t *testing.T, expectedEvents []*Event) {
 
 	actualEvents, err := GetEvents()
 	if err != nil {
-		t.Error(err)
+		t.Fatalf("error getting events: %v", err)
 	}
 
 	if len(actualEvents) != len(expectedEvents) {
@@ -145,4 +167,8 @@ func UnexpectedEvents(t *testing.T, unexpectedEvents []*Event) {
 			}
 		}
 	}
+}
+
+func getFullURL(port, path string) string {
+	return fmt.Sprintf("%v:%v/%v", urlBase, port, path)
 }

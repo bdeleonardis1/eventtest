@@ -3,7 +3,6 @@ package events
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 )
 
@@ -59,13 +58,20 @@ func (hctx *HandlerContext) clearEventHandler(w http.ResponseWriter, r *http.Req
 	}
 }
 
-func createServer() {
+func createServer(port string) *http.Server {
 	hctx := NewHandlerContext()
 
-	http.HandleFunc("/emitevent/", hctx.emitEventHandler)
-	http.HandleFunc("/getevents/", hctx.getEventsHandler)
-	http.HandleFunc("/clearevents/", hctx.clearEventHandler)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/emitevent/", hctx.emitEventHandler)
+	mux.HandleFunc("/getevents/", hctx.getEventsHandler)
+	mux.HandleFunc("/clearevents/", hctx.clearEventHandler)
 
-	fmt.Println("listening at 127.0.0.1:1111")
-	log.Fatal(http.ListenAndServe(":1111", nil))
+	server := &http.Server{Addr: ":" + port, Handler: mux}
+
+	fmt.Println("listening at 127.0.0.1:" + port)
+	go func() {
+		server.ListenAndServe()
+	}()
+
+	return server
 }

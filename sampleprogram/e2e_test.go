@@ -13,8 +13,10 @@ const (
 )
 
 func TestParity(t *testing.T) {
-	events.StartListening("", "")
-	defer events.StopListening()
+	server := events.StartListening("")
+	defer func() {
+		events.StopListening(server)
+	}()
 
 	testCases := []struct{
 		input string
@@ -80,6 +82,9 @@ func TestParity(t *testing.T) {
 }
 
 func TestExpectEventsDemo(t *testing.T) {
+	server := events.StartListening("")
+	defer events.StopListening(server)
+
 	events.ClearEvents()
 
 	cmd := exec.Command("./sampleprogram")
@@ -97,7 +102,3 @@ func TestExpectEventsDemo(t *testing.T) {
 	// should fail.
 	events.ExpectEvents(t, []*events.Event{events.NewEvent("TheVeryEnd"), events.NewEvent("convertToNumber")}, events.Ordered)
 }
-
-
-
-
