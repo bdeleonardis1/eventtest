@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-type HandlerContext struct {
+type handlerContext struct {
 	eventList *EventList
 }
 
@@ -14,13 +14,13 @@ const (
 	defaultPort = "1111"
 )
 
-func NewHandlerContext() *HandlerContext {
-	return &HandlerContext{
+func newHandlerContext() *handlerContext {
+	return &handlerContext{
 		eventList: NewEventList(),
 	}
 }
 
-func (hctx *HandlerContext) getEventsHandler(w http.ResponseWriter, r *http.Request) {
+func (hctx *handlerContext) getEventsHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("getEvents handler", r.Method)
 
 	switch r.Method {
@@ -37,7 +37,7 @@ func (hctx *HandlerContext) getEventsHandler(w http.ResponseWriter, r *http.Requ
 	}
 }
 
-func (hctx *HandlerContext) emitEventHandler(w http.ResponseWriter, r *http.Request) {
+func (hctx *handlerContext) emitEventHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("inside emitEvent", r.Method)
 	switch r.Method {
 	case http.MethodPost:
@@ -57,7 +57,7 @@ func (hctx *HandlerContext) emitEventHandler(w http.ResponseWriter, r *http.Requ
 	}
 }
 
-func (hctx *HandlerContext) clearEventHandler(w http.ResponseWriter, r *http.Request) {
+func (hctx *handlerContext) clearEventHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
 		hctx.eventList.ClearEvents()
@@ -69,7 +69,7 @@ func (hctx *HandlerContext) clearEventHandler(w http.ResponseWriter, r *http.Req
 }
 
 func createServer() *http.Server {
-	hctx := NewHandlerContext()
+	hctx := newHandlerContext()
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/emitevent/", hctx.emitEventHandler)

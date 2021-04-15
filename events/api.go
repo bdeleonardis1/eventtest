@@ -23,6 +23,9 @@ const (
 	Unordered
 )
 
+// EmitEvent emits an event. If the MONGOHOUSE_ENVIRONMENT variable
+// is not set to local this will be a noop, so that it only runs
+// during tests.
 func EmitEvent(event *Event) error {
 	if "local" != os.Getenv(environmentEnvVar) {
 		return nil
@@ -45,6 +48,8 @@ func EmitEvent(event *Event) error {
 	return nil
 }
 
+// GetEvents returns all the events that have been emitted since the last
+// time they were cleared.
 func GetEvents() ([]*Event, error) {
 	if "local" != os.Getenv(environmentEnvVar) {
 		return nil, nil
@@ -64,6 +69,7 @@ func GetEvents() ([]*Event, error) {
 	return events, nil
 }
 
+// ClearEvents clears all the events that have been emitted so far.
 func ClearEvents() error {
 	if "local" != os.Getenv(environmentEnvVar) {
 		return nil
@@ -80,6 +86,8 @@ func ClearEvents() error {
 	return nil
 }
 
+// ExpectExactEvents will error if the events that have been emitted
+// do not exactly match the expectedEvents.
 func ExpectExactEvents(t *testing.T, expectedEvents []*Event) {
 	t.Helper()
 
@@ -99,6 +107,10 @@ func ExpectExactEvents(t *testing.T, expectedEvents []*Event) {
 	}
 }
 
+// ExpectEvents ensures that all expectedEvents have occurred. When ordered is
+// Ordered, the expected events must occur in order in relation to each other.
+// When ordered is Unordered, the events can occur in any order. This function
+// ignores any events that are not in the expectedEvents list.
 func ExpectEvents(t *testing.T, expectedEvents []*Event, ordered IsOrdered) {
 	t.Helper()
 
@@ -153,6 +165,8 @@ func expectEventsUnordered(t *testing.T, expectedEvents, actualEvents []*Event) 
 	}
 }
 
+// UnexpectedEvents if any of the events so far emitted
+// are in the provided unexpectedEvents list.
 func UnexpectedEvents(t *testing.T, unexpectedEvents []*Event) {
 	t.Helper()
 
