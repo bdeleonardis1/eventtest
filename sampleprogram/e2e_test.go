@@ -13,7 +13,7 @@ const (
 )
 
 func TestParity(t *testing.T) {
-	server := events.StartListening("")
+	server := events.StartListening()
 	defer events.StopListening(server)
 
 	testCases := []struct {
@@ -80,7 +80,7 @@ func TestParity(t *testing.T) {
 }
 
 func TestExpectEventsDemo(t *testing.T) {
-	server := events.StartListening("")
+	server := events.StartListening()
 	defer events.StopListening(server)
 
 	events.ClearEvents()

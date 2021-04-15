@@ -2,27 +2,14 @@ package events
 
 import (
 	"context"
-	"os"
-)
-
-const (
-	envVarPortName = "EVENTTESTPORT"
 )
 
 type CloseableServer interface {
 	Shutdown(context.Context) error
 }
 
-func StartListening(port string) CloseableServer {
-	if port == "" {
-		port = "1111"
-	}
-	os.Setenv(envVarPortName, port)
-
-	server := createServer(port)
-
-	os.Setenv(envVarPortName, port)
-	return server
+func StartListening() CloseableServer {
+	return createServer()
 }
 
 func StopListening(server CloseableServer) {
@@ -30,5 +17,4 @@ func StopListening(server CloseableServer) {
 	if err != nil {
 		panic(err)
 	}
-	//os.Unsetenv(envVarPortName)
 }

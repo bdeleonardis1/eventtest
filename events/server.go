@@ -4,12 +4,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 )
 
 type HandlerContext struct {
 	eventList *EventList
 }
+
+const (
+	defaultPort = "1111"
+)
 
 func NewHandlerContext() *HandlerContext {
 	return &HandlerContext{
@@ -65,17 +68,15 @@ func (hctx *HandlerContext) clearEventHandler(w http.ResponseWriter, r *http.Req
 	}
 }
 
-func createServer(port string) *http.Server {
+func createServer() *http.Server {
 	hctx := NewHandlerContext()
-
-	fmt.Println(os.Getenv(envVarPortName))
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/emitevent/", hctx.emitEventHandler)
 	mux.HandleFunc("/getevents/", hctx.getEventsHandler)
 	mux.HandleFunc("/clearevents/", hctx.clearEventHandler)
 
-	server := &http.Server{Addr: ":" + port, Handler: mux}
+	server := &http.Server{Addr: ":" + defaultPort, Handler: mux}
 
 	go func() {
 		server.ListenAndServe()

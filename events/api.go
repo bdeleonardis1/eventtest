@@ -12,7 +12,9 @@ import (
 type IsOrdered int
 
 const (
-	urlBase         = "http://127.0.0.1"
+	environmentEnvVar = "MONGOHOUSE_ENVIRONMENT"
+
+	urlBase         = "http://127.0.0.1:1111/"
 	emitEventPath   = "emitevent/"
 	getEventsPath   = "getevents/"
 	clearEventsPath = "clearevents/"
@@ -22,9 +24,7 @@ const (
 )
 
 func EmitEvent(event *Event) error {
-	port := os.Getenv(envVarPortName)
-	if port == "" {
-		//panic("how is port empty: " + envVarPortName)
+	if "local" != os.Getenv(environmentEnvVar) {
 		return nil
 	}
 
@@ -33,7 +33,7 @@ func EmitEvent(event *Event) error {
 		return err
 	}
 
-	res, err := http.Post(getFullURL(port, emitEventPath), "application/json", bytes.NewBuffer(marshaledEvent))
+	res, err := http.Post(getFullURL(emitEventPath), "application/json", bytes.NewBuffer(marshaledEvent))
 	if err != nil {
 		return err
 	}
@@ -46,12 +46,11 @@ func EmitEvent(event *Event) error {
 }
 
 func GetEvents() ([]*Event, error) {
-	port := os.Getenv(envVarPortName)
-	if port == "" {
-		return nil, fmt.Errorf("%v environment variable not set, ensure you called StartListening", envVarPortName)
+	if "local" != os.Getenv(environmentEnvVar) {
+		return nil, nil
 	}
 
-	res, err := http.Get(getFullURL(port, getEventsPath))
+	res, err := http.Get(getFullURL(getEventsPath))
 
 	if err != nil {
 		return nil, err
@@ -66,12 +65,11 @@ func GetEvents() ([]*Event, error) {
 }
 
 func ClearEvents() error {
-	port := os.Getenv(envVarPortName)
-	if port == "" {
-		return fmt.Errorf("%v environment variable not set, ensure you called StartListening", envVarPortName)
+	if "local" != os.Getenv(environmentEnvVar) {
+		return nil
 	}
 
-	res, err := http.Post(getFullURL(port, clearEventsPath), "application/json", bytes.NewBuffer([]byte("{}")))
+	res, err := http.Post(getFullURL(clearEventsPath), "application/json", bytes.NewBuffer([]byte("{}")))
 	if err != nil {
 		return err
 	}
@@ -172,6 +170,6 @@ func UnexpectedEvents(t *testing.T, unexpectedEvents []*Event) {
 	}
 }
 
-func getFullURL(port, path string) string {
-	return fmt.Sprintf("%v:%v/%v", urlBase, port, path)
+func getFullURL(path string) string {
+	return urlBase + path
 }
